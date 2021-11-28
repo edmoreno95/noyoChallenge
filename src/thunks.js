@@ -2,15 +2,33 @@ import { actions } from './redux-store';
 
 const API_BASE = 'http://localhost:5000'
 
-const fetchUserIds = () => (dispatch) => {
-  return fetch(`${API_BASE}/user_ids`).then((response) => {
-    if (!response.ok) {
-      return dispatch({
-        type: actions.FETCH_USERS_ERROR,
-      })
-    }
 
-    return response.json();
+const fetchUserIdsWithRetry = (retries = 5) => (dispatch) => {
+  return new Promise((resolve, reject) => {
+    fetchUserIds(retries, dispatch).then(resolve).catch((error) => {
+        if(retries === 1){
+          dispatch({
+            type: actions.FETCH_USERS_ERROR,
+          });
+        } else {
+          setTimeout(() => dispatch(fetchUserIdsWithRetry(retries-1)), 10000);
+        }
+      }
+    );
+  })
+}
+
+const fetchUserIds = (retries, dispatch) => {
+  return fetch(`${API_BASE}/user_ids`).then((response) => {
+    if(response.ok){
+      return response.json();
+    }
+    if (response.status >= 500 && retries !== 1 ) {
+      return setTimeout(() => fetchUserIds(retries-1), 10000);
+    }
+    return dispatch({
+      type: actions.FETCH_USERS_ERROR,
+    })
   }, err => {
     throw err
   }).then(data => {
@@ -19,9 +37,7 @@ const fetchUserIds = () => (dispatch) => {
       payload: data
     })
   }, err => {
-    return dispatch({
-      type: actions.FETCH_USERS_ERROR
-    })
+    throw err
   })
 }
 
@@ -99,4 +115,4 @@ const fetchSelectedEventDetails = () => (dispatch, getState) => {
   })
 }
 
-export { fetchUserIds, fetchAddresses, fetchEvents, fetchSelectedEventDetails }
+export { fetchUserIds, fetchAddresses, fetchEvents, fetchSelectedEventDetails, fetchUserIdsWithRetry }

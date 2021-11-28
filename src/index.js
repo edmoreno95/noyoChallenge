@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 
 import { store } from './redux-store';
-import { fetchUserIds } from './thunks'
+import { fetchUserIdsWithRetry } from './thunks'
 import { App } from './components.jsx'
 
 import "./index.css";
@@ -16,7 +16,7 @@ import "./index.css";
  */
 const rootElement = document.getElementById('root')
 
-store.dispatch(fetchUserIds())
+store.dispatch(fetchUserIdsWithRetry())
 ReactDOM.render(
   <Provider store={store}>
     <App />

@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 
 import { canSelectEvents } from './selectors'
 import actions from './actions'
-import { fetchUserIds } from './thunks'
+import { fetchUserIdsWithRetry } from './thunks'
 import { App } from './components.jsx'
 
 /**
@@ -123,7 +123,7 @@ const store = createStore(reducer, initialState, applyMiddleware(thunk))
  */
 const rootElement = document.getElementById('root')
 
-store.dispatch(fetchUserIds())
+store.dispatch(fetchUserIdsWithRetry())
 ReactDOM.render(
   <Provider store={store}>
     <App />
