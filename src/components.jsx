@@ -1,7 +1,7 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { connect } from 'react-redux'
 
-import { fetchAddresses, fetchEvents, fetchSelectedEventDetails } from './thunks'
+import { fetchAddresses, fetchEvents, fetchSelectedEventDetails, fetchUserIds } from './thunks'
 import { eventGuid, canSelectEvents, undeletedAddresses } from './selectors'
 import { actions } from './redux-store'
 
@@ -118,7 +118,13 @@ Address = connect((state, ownProps) => {
 
 
 //--> App wrapper
-let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, error} ) => {
+let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, error, dispatch} ) => {
+
+   // Here we want to use the useEffect hook to populate the addresses when the app first mounts
+   useEffect(() => {
+    dispatch(fetchUserIds())
+  }, []);
+
   return <>
     {error ? <p className="error">{error}</p> : ''}
     {userIds && userIds.length ?

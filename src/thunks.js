@@ -10,7 +10,7 @@ const fetchUserIds = () => (dispatch) => {
       })
     }
 
-    return response.json
+    return response.json();
   }, err => {
     throw err
   }).then(data => {
@@ -30,22 +30,22 @@ const fetchAddresses = (userId) => (dispatch) => {
     if (!response.ok) {
       return dispatch({
         type: actions.FETCH_ADDRESS_ERROR,
-      })
+      });
     }
 
-    return response.json()
+    return response.json();
   }, err => {
     throw err
   }).then(data => {
     return dispatch({
       type: actions.FETCH_ADDRESS_SUCCESS,
       payload: data
-    })
+    });
   }, err => {
     return dispatch({
       type: actions.FETCH_ADDRESS_ERROR
-    })
-  })
+    });
+  });
 }
 
 const fetchEvents = (addressId) => (dispatch) => {
