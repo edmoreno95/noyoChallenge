@@ -41,7 +41,6 @@ let Modal = ({comparingEvents, comparisonJson, dispatch})=> {
   null;
 }
 Modal = connect(state => {
-  console.log(state)
   return {
     comparingEvents: state.comparingEvents,
     comparisonJson: state.comparisonJson
