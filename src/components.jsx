@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import ReactDiffViewer from 'react-diff-viewer';
 
-import { fetchAddresses, fetchEvents, fetchSelectedEventDetails, fetchUserIds } from './thunks'
+import { fetchAddresses, fetchEvents, fetchSelectedEventDetails } from './thunks'
 import { eventGuid, canSelectEvents, undeletedAddresses } from './selectors'
 import { actions } from './redux-store'
 
