@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import ReactDiffViewer from 'react-diff-viewer';
 
@@ -162,12 +162,7 @@ Address = connect((state, ownProps) => {
 
 
 //--> App wrapper
-let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, error, dispatch} ) => {
-
-   // Here we want to use the useEffect hook to populate the addresses when the app first mounts
-   useEffect(() => {
-    dispatch(fetchUserIds())
-  }, []);
+let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, error} ) => {
 
   return <>
     {error ? <p className="error">{error}</p> : ''}
