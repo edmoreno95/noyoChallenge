@@ -41,3 +41,22 @@ form, .addresses {
 .addresses .selected > pre {
   outline: 1px dashed #333;
 }
+
+.modal {
+  min-width: 700px;
+  background: white;
+  border: 1px solid #ccc;
+  opacity: 1;
+  position: absolute;
+  float: left;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+.modal-header, .modal-buttons {
+  text-align: center;
+}
+
+.modal-buttons {
+  padding: 10px;
+}

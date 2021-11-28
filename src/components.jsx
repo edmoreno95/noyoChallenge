@@ -1,10 +1,52 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { connect } from 'react-redux'
+import ReactDiffViewer from 'react-diff-viewer';
 
 import { fetchAddresses, fetchEvents, fetchSelectedEventDetails, fetchUserIds } from './thunks'
 import { eventGuid, canSelectEvents, undeletedAddresses } from './selectors'
 import { actions } from './redux-store'
 
+const closeModal = (dispatch) => (e) => {
+  dispatch({
+    type: actions.EXIT_COMPARE_MODE
+  })
+}
+
+let Modal = ({comparingEvents, comparisonJson, dispatch})=> {
+
+  let oldValue = "";
+  let newValue = "";
+  if(comparisonJson && comparisonJson.length > 0 ) {
+    oldValue = JSON.stringify(comparisonJson[0], null, 2);
+    newValue = JSON.stringify(comparisonJson[1], null, 2);
+  }
+  return comparingEvents ? (
+  <div className='modal'>
+    <h2 className='modal-header'>Address Event Comparison</h2>
+    <ReactDiffViewer 
+      oldValue={oldValue} 
+      newValue={newValue} 
+      splitView={true} 
+      compareMethod={'diffWords'} 
+    />
+    <div className='modal-buttons'>
+      <button
+        onClick={closeModal(dispatch)}
+      >
+        Close
+      </button>
+    </div>
+  </div>
+  ) :
+  null;
+}
+Modal = connect(state => {
+  console.log(state)
+  return {
+    comparingEvents: state.comparingEvents,
+    comparisonJson: state.comparisonJson
+  }
+})(Modal)
 
 //--> User select form
 const submitHandler = (dispatch, userId) => (e) => {
@@ -75,7 +117,10 @@ const handleCompareClick = (dispatch) => (e) => {
    * and referenced in the comment below on line 78.
    */
 
-  // dispatch(fetchSelectedEventDetails())
+  dispatch(fetchSelectedEventDetails())
+  dispatch({
+    type: actions.COMPARE_SELECTED_EVENTS
+  });
 }
 
 let EventList = ({dispatch, canCompare, events}) => {
@@ -118,7 +163,7 @@ Address = connect((state, ownProps) => {
 
 
 //--> App wrapper
-let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comparingEvents, error, dispatch} ) => {
+let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, error, dispatch} ) => {
 
    // Here we want to use the useEffect hook to populate the addresses when the app first mounts
    useEffect(() => {
@@ -148,6 +193,7 @@ let App = ({ addresses, events, userIds, selectedUserId, selectedAddressId, comp
         : <p>{selectedAddressId ? 'No events found.' : 'Select an address to see events'}</p>
       }
     </div>
+    <Modal/>
   </>
 }
 App = connect(state => {
